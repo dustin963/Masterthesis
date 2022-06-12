@@ -11,7 +11,7 @@ from datetime import datetime
 #pipreqs "C:\Users\dusti\OneDrive\Maastricht\Master\MasterArbeit\coding stuff\Github"
 #path = os.path.dirname(__file__)
 my_file = 'Model_09_06_2022_size20_nrtopicsauto_reducedto60.xlsx'
-st.set_page_config(page_title="Sales Dashboard", page_icon=":bar_chart:", layout="wide")
+st.set_page_config(page_title="Topic Modelling German Banking", page_icon=":bar_chart:", layout="wide")
 @st.cache
 def get_data():
     df = pd.read_excel(my_file, sheet_name="evaluations",usecols="B:D,F,G,H,L:M")
