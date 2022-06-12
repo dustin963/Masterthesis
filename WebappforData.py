@@ -5,6 +5,7 @@ import streamlit as st  # pip install streamlit
 import plotly.graph_objects as go
 from statsmodels.stats import proportion
 from datetime import datetime
+import streamlit.components.v1 as components
 #from bertopic import BERTopic
 
 
@@ -143,7 +144,10 @@ st.plotly_chart(proportions_chart,height=800,use_container_width=True)
 
 st.dataframe(df_selection)
 
+HtmlFile = open("text.html", 'r', encoding='utf-8')
+source_code = HtmlFile.read() 
 
+components.html(source_code, width=10000, height=1000,scrolling=True)
 
 
 
