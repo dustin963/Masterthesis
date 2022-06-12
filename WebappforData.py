@@ -14,7 +14,7 @@ my_file = 'Model_09_06_2022_size20_nrtopicsauto_reducedto60.xlsx'
 st.set_page_config(page_title="Topic Modelling German Banking", page_icon=":bar_chart:", layout="wide")
 @st.cache
 def get_data():
-    df = pd.read_excel(my_file, sheet_name="evaluations",usecols="B:D,F,G,H,L:M")
+    df = pd.read_excel(io="Model_09_06_2022_size20_nrtopicsauto_reducedto60.xlsx",engine="openpyxl",sheet_name="evaluations",usecols="B:D,F,G,H,L:M")
     df = df[df["Customer Dimension"]!="Nicht klassifiziert"]
     return df
 df = get_data()
