@@ -1,16 +1,16 @@
 import pandas as pd  # pip install pandas openpyxl
 import plotly.express as px  # pip install plotly-express
 import streamlit as st  # pip install streamlit
-import os
+#import os
 import plotly.graph_objects as go
 from statsmodels.stats import proportion
 from datetime import datetime
 #from bertopic import BERTopic
 
 
-
-path = os.path.dirname(__file__)
-my_file = path+'/Model_09_06_2022_size20_nrtopicsauto_reducedto60.xlsx'
+#pipreqs "C:\Users\dusti\OneDrive\Maastricht\Master\MasterArbeit\coding stuff\Github"
+#path = os.path.dirname(__file__)
+my_file = 'Model_09_06_2022_size20_nrtopicsauto_reducedto60.xlsx'
 st.set_page_config(page_title="Sales Dashboard", page_icon=":bar_chart:", layout="wide")
 @st.cache
 def get_data():
