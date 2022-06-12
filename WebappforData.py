@@ -5,7 +5,7 @@ import os
 import plotly.graph_objects as go
 from statsmodels.stats import proportion
 from datetime import datetime
-from bertopic import BERTopic
+#from bertopic import BERTopic
 
 
 
@@ -125,14 +125,14 @@ with right_column:
     st.subheader("Summary:")
     st.dataframe(summarytable)
 
-topic_model = BERTopic.load(path+"/my_model")
-barcharttopicmodel = topic_model.visualize_barchart(n_words=10,top_n_topics=60)
+#topic_model = BERTopic.load(path+"/my_model")
+#barcharttopicmodel = topic_model.visualize_barchart(n_words=10,top_n_topics=60)
 
 
 
 
 st.plotly_chart(proportions_chart,height=800,use_container_width=True)
-st.plotly_chart(barcharttopicmodel)
+#st.plotly_chart(barcharttopicmodel)
 
 
 
