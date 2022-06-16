@@ -144,12 +144,12 @@ st.plotly_chart(proportions_chart,height=800,use_container_width=True)
 
 st.dataframe(df_selection)
 
-HtmlFile = open("/text.html", 'r', encoding='utf-8')
+HtmlFile = open("text.html", 'r', encoding='utf-8')
 source_code = HtmlFile.read() 
 
 components.html(source_code, width=10000, height=1000,scrolling=True)
 
-HtmlFile = open("/visualizedtopics.html", 'r', encoding='utf-8')
+HtmlFile = open("visualizedtopics.html", 'r', encoding='utf-8')
 visualizedtopics_code = HtmlFile.read() 
 
 
