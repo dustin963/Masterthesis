@@ -11,12 +11,12 @@ import streamlit.components.v1 as components
 
 #pipreqs "C:\Users\dusti\OneDrive\Maastricht\Master\MasterArbeit\coding stuff\Github"
 #path = os.path.dirname(__file__)
-my_file = 'Model_09_06_2022_size20_nrtopicsauto_reducedto60.xlsx'
+my_file = '15.06NRautoreduced to 100.xlsx'
 st.set_page_config(page_title="Topic Modelling German Banking", page_icon=":bar_chart:", layout="wide")
 @st.cache
 def get_data():
-    df = pd.read_excel(io="Model_09_06_2022_size20_nrtopicsauto_reducedto60.xlsx",engine="openpyxl",sheet_name="evaluations",usecols="B:D,F,G,H,L:M")
-    df = df[df["Customer Dimension"]!="Nicht klassifiziert"]
+    df = pd.read_excel(io="15.06NRautoreduced to 100.xlsx",engine="openpyxl",sheet_name="evaluations")
+    df = df[df["customer dimension"]!="not classified"]
     return df
 df = get_data()
 
@@ -26,10 +26,10 @@ st.markdown("##")
 
 #st.sidebar.header("Please Filter Here:")
 st.header(":triangular_ruler: Filters")
-banktyp = st.multiselect(
-    "Select the Banktype:",
-    options=df["Banktyp"].unique(),
-    default=df["Banktyp"].unique()
+banktype = st.multiselect(
+    "Select the banktype:",
+    options=df["banktype"].unique(),
+    default=df["banktype"].unique()
 )
 start_time,end_time = st.slider(
      "Correpsonding Timespans",
@@ -40,7 +40,7 @@ st.text(end_time)
 st.markdown("##")
 st.markdown("""---""")
 
-df_selection = df.query("Banktyp==@banktyp & date>=@start_time & date<=@end_time")
+df_selection = df.query("banktype==@banktype & date>=@start_time & date<=@end_time")
 st.header(":mag: Descriptives")
 # TOP KPI's
 total_reviews = int(df_selection["company"].count())
@@ -50,7 +50,7 @@ amount_banks = round(df_selection["company"].nunique(), 2)
 
 left_column, middle_column, right_column = st.columns(3)
 with left_column:
-    st.subheader("Total Reviews:")
+    st.subheader("Classified Reviews:")
     st.subheader(f"{total_reviews:,}")
 with middle_column:
     st.subheader("Average Rating:")
@@ -63,46 +63,46 @@ st.markdown("##")
 st.markdown("""---""")
 
 
-rating_by_banktype = (
-    df_selection.groupby(by=["Banktyp"]).mean()[["rating"]].sort_values(by="rating")
+rating_by_banktypee = (
+    df_selection.groupby(by=["banktype"]).mean()[["rating"]].sort_values(by="rating")
 )
 fig_rating_by_type = px.bar(
-    rating_by_banktype,
-    x=rating_by_banktype.index,
+    rating_by_banktypee,
+    x=rating_by_banktypee.index,
     y="rating",
     orientation="v",
-    title="<b>Rating by Banktype</b>",
-    color_discrete_sequence=["#0083B8"] * len(rating_by_banktype),
+    title="<b>Rating by banktypee</b>",
+    color_discrete_sequence=["#0083B8"] * len(rating_by_banktypee),
     template="plotly_white",)
 
 fig_rating_by_type.update_layout(
     plot_bgcolor="rgba(0,0,0,0)",
     xaxis=(dict(showgrid=False))
 )
-banktyps = df_selection["Banktyp"].unique()
-dimensions = df_selection["Customer Dimension"].unique()
+banktypes = df_selection["banktype"].unique()
+dimensions = df_selection["customer dimension"].unique()
 
 proportions = []
 error = []
 customerdimension = []
-banktypl = []
+banktypel = []
 
-for banktyp in banktyps:
+for banktype in banktypes:
     for dimension in dimensions:
-        y,x =proportion.proportion_confint(count=df_selection[(df_selection["Banktyp"]==banktyp)& (df_selection["Customer Dimension"]==dimension)]["company"].count(),    # Number of "successes"
-                   nobs=df_selection[(df_selection["Banktyp"]==banktyp)]["company"].count(),    # Number of trials
+        y,x =proportion.proportion_confint(count=df_selection[(df_selection["banktype"]==banktype)& (df_selection["customer dimension"]==dimension)]["company"].count(),    # Number of "successes"
+                   nobs=df_selection[(df_selection["banktype"]==banktype)]["company"].count(),    # Number of trials
                    alpha=(1 - 0.95))
         e = (x+y)/2-y
         p = (x+y)/2
         proportions.append(p)
         error.append(e)
         customerdimension.append(dimension)
-        banktypl.append(banktyp)
+        banktypel.append(banktype)
         
 
 
-proportions_bydimension = pd.DataFrame({"dimension":customerdimension,'banktyp': banktypl, 'proportion': proportions, 'error': error })
-proportions_chart = px.scatter(proportions_bydimension, x="dimension", y="proportion", color="banktyp",
+proportions_bydimension = pd.DataFrame({"dimension":customerdimension,'banktype': banktypel, 'proportion': proportions, 'error': error })
+proportions_chart = px.scatter(proportions_bydimension, x="dimension", y="proportion", color="banktype",
                  error_y="error")
 proportions_chart.update_layout(height=800,
     plot_bgcolor="rgba(0,0,0,0)",
@@ -144,13 +144,16 @@ st.plotly_chart(proportions_chart,height=800,use_container_width=True)
 
 st.dataframe(df_selection)
 
-HtmlFile = open("text.html", 'r', encoding='utf-8')
+HtmlFile = open("/text.html", 'r', encoding='utf-8')
 source_code = HtmlFile.read() 
 
 components.html(source_code, width=10000, height=1000,scrolling=True)
 
+HtmlFile = open("/visualizedtopics.html", 'r', encoding='utf-8')
+visualizedtopics_code = HtmlFile.read() 
 
 
+components.html(visualizedtopics_code, width=1000, height=1000,scrolling=False)
 
 
 
@@ -162,3 +165,4 @@ hide_st_style = """
             </style>
             """
 st.markdown(hide_st_style, unsafe_allow_html=True)
+
