@@ -252,7 +252,7 @@ st.dataframe(df_selection[["company","date","headline","originalbody","rating","
 HtmlFile = open("text.html", 'r', encoding='utf-8')
 source_code = HtmlFile.read() 
 
-components.html(source_code, width=10000, height=1000,scrolling=True)
+
 
 HtmlFile = open("visualizedtopics.html", 'r', encoding='utf-8')
 visualizedtopics_code = HtmlFile.read() 
