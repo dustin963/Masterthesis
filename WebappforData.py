@@ -208,7 +208,7 @@ st.plotly_chart(yearly_amount_chart,use_container_width=True)
 
 length_rating = go.Figure()
 length_rating.add_trace(go.Box(x=dfunfiltered["rating"],
-    y=df["length of review"],
+    y=dfunfiltered["length of review"],
     name="Onl",
     boxpoints="suspectedoutliers", # no data points
     marker_color='rgb(9,56,125)',
