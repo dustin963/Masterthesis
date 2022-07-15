@@ -29,16 +29,15 @@ def get_data():
     return df,dfunfiltered
 df,dfunfiltered = get_data()
 
-# ---- MAINPAGE ----
 st.title(":bar_chart: Customer Evaluations")
 st.markdown("##")
 
 st.sidebar.header(":triangular_ruler: Filters")
 
-banktype = st.sidebar.multiselect(
-    "Select the banktype:",
-    options=df["banktype"].unique(),
-    default=df["banktype"].unique()
+Banktype = st.sidebar.multiselect(
+    "Select the Banktype:",
+    options=df["Banktype"].unique(),
+    default=df["Banktype"].unique()
 )
 start_time,end_time = st.sidebar.select_slider(
      "Correpsonding Timespans",
@@ -50,10 +49,10 @@ start_time,end_time = st.sidebar.select_slider(
 st.sidebar.subheader("About")
 st.sidebar.info("The corresponding code can be found on [Github](https://github.com/dustin963/Masterthesis)")
 
-#df_selection = df.query("banktype==@banktype & date>=@start_time & date<=@end_time")
-#dfunfiltered = dfunfiltered.query("banktype==@banktype & date>=@start_time & date<=@end_time")
-df_selection = df.query("banktype==@banktype & year>=@start_time & year<=@end_time")
-dfunfiltered = dfunfiltered.query("banktype==@banktype & year>=@start_time & year<=@end_time")
+#df_selection = df.query("Banktype==@Banktype & date>=@start_time & date<=@end_time")
+#dfunfiltered = dfunfiltered.query("Banktype==@Banktype & date>=@start_time & date<=@end_time")
+df_selection = df.query("Banktype==@Banktype & year>=@start_time & year<=@end_time")
+dfunfiltered = dfunfiltered.query("Banktype==@Banktype & year>=@start_time & year<=@end_time")
 
 st.header(":mag: Descriptives")
 # TOP KPI's
@@ -81,16 +80,16 @@ st.markdown("##")
 
 
 
-rating_by_banktypee = (
-    dfunfiltered.groupby(by=["banktype"]).mean()[["rating"]].sort_values(by="rating")
+rating_by_Banktypee = (
+    df_selection.groupby(by=["Banktype"]).mean()[["rating"]].sort_values(by="rating")
 )
 fig_rating_by_type = px.bar(
-    rating_by_banktypee,
-    x=rating_by_banktypee.index,
+    rating_by_Banktypee,
+    x=rating_by_Banktypee.index,
     y="rating",
     orientation="v",
-    title="<b>Rating by banktypee</b>",
-    color_discrete_sequence=["#0083B8"] * len(rating_by_banktypee),
+    title="<b>Rating by Banktype for classified reviews</b>",
+    color_discrete_sequence=["#0083B8"] * len(rating_by_Banktypee),
     template="plotly_white",)
 
 fig_rating_by_type.update_layout(
@@ -98,24 +97,24 @@ fig_rating_by_type.update_layout(
     xaxis=(dict(showgrid=False))
 )
 
-banktypes = df_selection["banktype"].unique()
+Banktypes = df_selection["Banktype"].unique()
 dimensions = df_selection["customer dimension"].unique()
 
 proportions = []
 error = []
 customerdimension = []
-banktypel = []
+Banktypel = []
 means = []
 counts = []
 error_mean = []
 
-for banktype in banktypes:
+for Banktype in Banktypes:
     for dimension in dimensions:
-        mean = df_selection[(df["banktype"]==banktype)& (df["customer dimension"]==dimension)]["rating"].mean()
-        my,mx =sta.norm.interval(alpha=0.95,loc=np.mean(df_selection[(df["banktype"]==banktype)& (df["customer dimension"]==dimension)]["rating"]))
-        count = df_selection[(df["banktype"]==banktype)& (df["customer dimension"]==dimension)]["rating"].count()
-        y,x =proportion.proportion_confint(count=df_selection[(df["banktype"]==banktype)& (df["customer dimension"]==dimension)]["body"].count(),    # Number of "successes"
-                   nobs=df_selection[(df["banktype"]==banktype)]["body"].count(),    # Number of trials
+        mean = df_selection[(df["Banktype"]==Banktype)& (df["customer dimension"]==dimension)]["rating"].mean()
+        my,mx =sta.norm.interval(alpha=0.95,loc=np.mean(df_selection[(df["Banktype"]==Banktype)& (df["customer dimension"]==dimension)]["rating"]))
+        count = df_selection[(df["Banktype"]==Banktype)& (df["customer dimension"]==dimension)]["rating"].count()
+        y,x =proportion.proportion_confint(count=df_selection[(df["Banktype"]==Banktype)& (df["customer dimension"]==dimension)]["body"].count(),    # Number of "successes"
+                   nobs=df_selection[(df["Banktype"]==Banktype)]["body"].count(),    # Number of trials
                    alpha=(1 - 0.95))
         e = (x+y)/2-y
         p = (x+y)/2
@@ -124,17 +123,17 @@ for banktype in banktypes:
         proportions.append(p)
         error.append(e)
         customerdimension.append(dimension)
-        banktypel.append(banktype)
+        Banktypel.append(Banktype)
         means.append(mean)
         error_mean.append(em)
         counts.append(count)
         
 
 
-proportions_bydimension = pd.DataFrame({"dimension":customerdimension,'banktype': banktypel, 'proportion': proportions, 'error proportions': error,"mean" :means,"count":counts,"error mean":error_mean})
+proportions_bydimension = pd.DataFrame({"dimension":customerdimension,'Banktype': Banktypel, 'proportion': proportions, 'error proportions': error,"mean" :means,"count":counts,"error mean":error_mean})
 
 
-proportions_chart = px.scatter(proportions_bydimension, x="dimension", y="proportion", color="banktype",
+proportions_chart = px.scatter(proportions_bydimension, x="dimension", y="proportion", color="Banktype",
                  error_y="error proportions")
 proportions_chart.update_layout(height=800,
     plot_bgcolor="rgba(0,0,0,0)",
@@ -153,7 +152,7 @@ dimensions_chart.update_layout(title='Customer Reviews by Percentage',
            xaxis_title='Customer Dimension', yaxis_title='Percentage of Reviews',title_x=0.5)
 
 
-proportions_chart_rating = px.bar(proportions_bydimension, x="dimension", y="mean", color="banktype",barmode="group"
+proportions_chart_rating = px.bar(proportions_bydimension, x="dimension", y="mean", color="Banktype",barmode="group"
                  )
 
 
@@ -197,11 +196,12 @@ with right_column:
     st.subheader("Summary:")
     st.dataframe(summarytable)
 
-st.subheader(":arrow_upper_right: New Rating across the year")
-yearly_review_amounts = (dfunfiltered.groupby(["year"],as_index=False).count().round(2)[["banktype","year"]])
-yearly_amount_chart= px.bar(yearly_review_amounts,x="year",y="banktype")
-yearly_amount_chart.update_layout(title='Amount of new Reviews per Year',
-           xaxis_title='Time', yaxis_title='Amount of new Reviews',title_x=0.5)
+st.subheader(":arrow_upper_right: New Rating across years")
+yearly_review_amounts = (dfunfiltered.groupby(pd.Grouper(key="date",freq="M")).count().reset_index(level=0))
+yearly_review_mounts  = yearly_review_amounts.rename(columns = {'Banktype':'New reviews'}, inplace = True)
+yearly_amount_chart= px.line(yearly_review_amounts,x="date",y="New reviews")
+yearly_amount_chart.update_layout(
+           xaxis_title='Time', yaxis_title='Amount of new reviews',title_x=0.5,width=900,template="plotly_white")
 
 
 st.plotly_chart(yearly_amount_chart,use_container_width=True)
@@ -229,20 +229,25 @@ st.subheader("Proportions for customer dimensions")
 
 st.plotly_chart(dimensions_chart,height=800,use_container_width=True)
 
-st.subheader("Proportions for customer dimensions by banktype including 95"+"%"+" confidence intervals")
+st.subheader("Proportions for customer dimensions by Banktype including 95"+"%"+" confidence intervals")
 
 st.plotly_chart(proportions_chart,height=800,use_container_width=True)
 
-st.subheader("Rating per customer dimension across banktype")
+st.subheader("Rating per customer dimension across Banktype")
 
 st.plotly_chart(proportions_chart_rating,height=800,use_container_width=True)
 
-st.subheader("Rating per customer dimension across banktype")
+#st.subheader("Rating per customer dimension across Banktype")
 
-st.plotly_chart(yearly_dimensions_chart,height=800,use_container_width=True)
+#st.plotly_chart(yearly_dimensions_chart,height=800,use_container_width=True)
 
 st.markdown("""---""")
 
+HtmlFile = open("treemap.html", 'r', encoding='utf-8')
+treemap = HtmlFile.read() 
+st.subheader("Top adjectives across the four most relevant dimensions")
+components.html(treemap,scrolling=False,width = 1200,height=1000)
+st.markdown("""---""")
 
 st.header(":page_facing_up: Dataframe")
 
