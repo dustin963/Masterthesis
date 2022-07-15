@@ -34,10 +34,10 @@ st.markdown("##")
 
 st.sidebar.header(":triangular_ruler: Filters")
 
-banktype = st.sidebar.multiselect(
+Banktype = st.sidebar.multiselect(
     "Select the Banktype:",
-    options=df["banktype"].unique(),
-    default=df["banktype"].unique()
+    options=df["Banktype"].unique(),
+    default=df["Banktype"].unique()
 )
 start_time,end_time = st.sidebar.select_slider(
      "Correpsonding Timespans",
