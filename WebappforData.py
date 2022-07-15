@@ -34,7 +34,7 @@ st.markdown("##")
 
 st.sidebar.header(":triangular_ruler: Filters")
 
-Banktype = st.sidebar.multiselect(
+banktype = st.sidebar.multiselect(
     "Select the Banktype:",
     options=df["Banktype"].unique(),
     default=df["Banktype"].unique()
